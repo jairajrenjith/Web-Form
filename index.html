@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Nomad Application</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .input-field {
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+        }
+        .input-field:focus {
+            border-color: #00bcd4; 
+            ring: 1px;
+            ring-color: #00bcd4;
+        }
+        .submit-btn {
+            background-color: #00bcd4;
+            color: #0d1117;
+            transition: all 0.3s ease;
+        }
+        .submit-btn:hover {
+            background-color: #00a0b2;
+            box-shadow: 0 4px 10px rgba(0, 188, 212, 0.5);
+        }
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .theme-toggle-btn {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s ease;
+        }
+        .theme-toggle-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .light-mode .theme-toggle-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .theme-toggle-btn svg {
+            transition: transform 0.4s ease-in-out;
+        }
+
+        body {
+            background-color: #0d1117; 
+            color: #c9d1d9;
+        }
+        .container-card {
+            background-color: #161b22;
+            box-shadow: 0 10px 15px -3px rgba(0, 200, 255, 0.1), 0 4px 6px -2px rgba(0, 200, 255, 0.05);
+            border: 1px solid #30363d;
+        }
+        .input-field {
+            background-color: #0d1117;
+            border-color: #30363d;
+            color: #c9d1d9;
+        }
+
+        .light-mode {
+            background-color: #f7fafc;
+            color: #1a202c;
+        }
+        .light-mode .container-card {
+            background-color: #ffffff;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+        .light-mode .input-field {
+            background-color: #ffffff;
+            border-color: #cbd5e0;
+            color: #1a202c;
+        }
+        .light-mode .text-white {
+            color: #1a202c;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen p-4 sm:p-8 flex items-center justify-center">
+        <div class="container-card w-full max-w-4xl p-6 md:p-10 rounded-xl relative">
+
+            <button id="themeToggle" onclick="toggleTheme()" class="theme-toggle-btn absolute top-4 right-4 p-2 rounded-full">
+                <svg id="moonIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M17.293 13.929A6.749 6.749 0 0110 17c-3.737 0-6.862-2.529-7.794-6C2.394 10.335 2 9.776 2 9c0-.776.394-1.335.206-2.071C3.138 3.529 6.263 1 10 1c3.737 0 6.862 2.529 7.794 6A6.749 6.749 0 0110 17z"/>
+                </svg>
+                <svg id="sunIcon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-yellow-500 hidden" viewBox="0 0 20 20" fill="currentColor">
+                    <circle cx="10" cy="10" r="6" />
+                </svg>
+            </button>
+            
+            <h1 class="text-3xl font-bold text-center mb-2 text-white light-mode:text-gray-900">Digital Nomad Application</h1>
+            <p class="text-center mb-8 text-gray-400">Join the remote workforce of the future. All fields are required unless noted.</p>
+            
+            <form id="applicationForm" onsubmit="handleFormSubmission(event)" class="space-y-6">
+
+                <fieldset class="border border-gray-700 light-mode:border-gray-300 p-4 rounded-lg space-y-4">
+                    <legend class="text-lg font-semibold px-2 text-teal-400">User Credentials</legend>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="full_name" class="block mb-1 text-sm font-medium">Full Name</label>
+                            <input type="text" id="full_name" name="full_name" placeholder="John Doe" required 
+                                class="input-field w-full p-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label for="email" class="block mb-1 text-sm font-medium">Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="user@domain.com" required 
+                                class="input-field w-full p-2 border rounded-lg">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="phone" class="block mb-1 text-sm font-medium">Phone Number (Optional)</label>
+                            <input type="tel" id="phone" name="phone" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" 
+                                class="input-field w-full p-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label for="password" class="block mb-1 text-sm font-medium">Create Secure PIN</label>
+                            <input type="password" id="password" name="password" minlength="6" required 
+                                class="input-field w-full p-2 border rounded-lg">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="border border-gray-700 light-mode:border-gray-300 p-4 rounded-lg space-y-4">
+                    <legend class="text-lg font-semibold px-2 text-teal-400">Role & Experience</legend>
+
+                    <div>
+                        <label for="target_role" class="block mb-1 text-sm font-medium">Target Role</label>
+                        <select id="target_role" name="target_role" required 
+                            class="input-field w-full p-2 border rounded-lg appearance-none">
+                            <option value="">Select a Role</option>
+                            <option value="frontend">Frontend Developer</option>
+                            <option value="backend">Backend Engineer</option>
+                            <option value="devops">DevOps Specialist</option>
+                            <option value="design">UI/UX Designer</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="experience" class="block mb-1 text-sm font-medium">Years of Experience</label>
+                            <input type="number" id="experience" name="experience" min="0" max="40" value="0" required 
+                                class="input-field w-full p-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label for="portfolio_url" class="block mb-1 text-sm font-medium">Portfolio/GitHub URL</label>
+                            <input type="url" id="portfolio_url" name="portfolio_url" placeholder="https://github.com/user" 
+                                class="input-field w-full p-2 border rounded-lg">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="skill_level" class="block mb-1 text-sm font-medium">Technical Skill Level (1-10)</label>
+                        <input type="range" id="skill_level" name="skill_level" min="1" max="10" value="5" oninput="document.getElementById('level_output').innerText=this.value" 
+                            class="w-full h-2 bg-gray-700 light-mode:bg-gray-300 rounded-lg appearance-none cursor-pointer range-lg accent-teal-400">
+                        <span id="level_output" class="block text-right text-sm mt-1 text-teal-400">5</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label for="start_date" class="block mb-1 text-sm font-medium">Earliest Start Date</label>
+                            <input type="date" id="start_date" name="start_date" required 
+                                class="input-field w-full p-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label for="interview_time" class="block mb-1 text-sm font-medium">Preferred Interview Time</label>
+                            <input type="time" id="interview_time" name="interview_time" 
+                                class="input-field w-full p-2 border rounded-lg">
+                        </div>
+                        <div>
+                            <label for="color_theme" class="block mb-1 text-sm font-medium">Favorite Terminal Color</label>
+                            <input type="color" id="color_theme" name="color_theme" value="#00bcd4" 
+                                class="w-full h-10 border-0 rounded-lg cursor-pointer">
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="border border-gray-700 light-mode:border-gray-300 p-4 rounded-lg space-y-4">
+                    <legend class="text-lg font-semibold px-2 text-teal-400">Attachments & Agreement</legend>
+                    
+                    <div>
+                        <label for="resume_file" class="block mb-1 text-sm font-medium">Upload Resume (PDF/DOCX)</label>
+                        <input type="file" id="resume_file" name="resume" accept=".pdf,.doc,.docx" required 
+                            class="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-500 file:text-black hover:file:bg-teal-400 cursor-pointer">
+                        <p class="text-xs text-gray-500 mt-1">Max size: 5MB</p>
+                    </div>
+
+                    <div>
+                        <label for="cover_letter" class="block mb-1 text-sm font-medium">Cover Letter / Introduction</label>
+                        <textarea id="cover_letter" name="cover_letter" rows="4" placeholder="Briefly introduce yourself and your motivation..." required 
+                            class="input-field w-full p-2 border rounded-lg"></textarea>
+                    </div>
+
+                    <div class="space-y-3">
+                        <p class="block text-sm font-medium">Preferred Work Style:</p>
+                        <div class="flex flex-wrap gap-6">
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="work_style" value="solo" required class="form-radio text-teal-400 bg-gray-800 border-gray-600 light-mode:bg-white light-mode:border-gray-400">
+                                <span class="text-sm">Solo Contributor</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="work_style" value="team" class="form-radio text-teal-400 bg-gray-800 border-gray-600 light-mode:bg-white light-mode:border-gray-400">
+                                <span class="text-sm">Team Collaboration</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="radio" name="work_style" value="hybrid" class="form-radio text-teal-400 bg-gray-800 border-gray-600 light-mode:bg-white light-mode:border-gray-400">
+                                <span class="text-sm">Hybrid Approach</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-3 pt-4">
+                        <input type="checkbox" id="terms_agree" name="terms_agree" required 
+                            class="form-checkbox h-4 w-4 text-teal-400 rounded bg-gray-800 border-gray-600 focus:ring-teal-500 light-mode:bg-white light-mode:border-gray-400">
+                        <label for="terms_agree" class="text-sm font-medium">I agree to the <a href="#" class="text-teal-400 hover:underline">Terms of Service</a>.</label>
+                    </div>
+
+                </fieldset>
+
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="reset" class="px-6 py-2 border border-gray-600 light-mode:border-gray-400 text-gray-400 light-mode:text-gray-600 rounded-lg hover:bg-gray-700 light-mode:hover:bg-gray-100 transition duration-300">
+                        Clear Form
+                    </button>
+                    <button type="submit" class="submit-btn px-8 py-3 rounded-lg font-bold text-lg">
+                        Submit Application
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div id="successModal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-overlay">
+        <div class="bg-gray-800 light-mode:bg-white p-8 rounded-xl max-w-sm w-full shadow-2xl border border-teal-400 transform transition-all scale-100 ease-out duration-300">
+            <div class="text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-teal-400 mx-auto mb-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+                <h3 class="text-2xl font-bold mb-2 text-white light-mode:text-gray-900">Submitted Successfully!</h3>
+                <p class="text-gray-400 light-mode:text-gray-600">Your Digital Nomad application has been received. We'll be in touch soon!</p>
+            </div>
+            <div class="mt-6">
+                <button onclick="closeModal()" class="w-full submit-btn py-2 rounded-lg font-semibold">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const themeKey = 'app-theme';
+        const body = document.body;
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+
+        function applyTheme(theme) {
+            if (theme === 'light') {
+                body.classList.add('light-mode');
+                if (sunIcon && moonIcon) {
+                    sunIcon.classList.remove('hidden');
+                    moonIcon.classList.add('hidden');
+                }
+            } else {
+                body.classList.remove('light-mode');
+                if (sunIcon && moonIcon) {
+                    sunIcon.classList.add('hidden');
+                    moonIcon.classList.remove('hidden');
+                }
+            }
+            localStorage.setItem(themeKey, theme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = body.classList.contains('light-mode') ? 'light' : 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        }
+
+        function handleFormSubmission(event) {
+            event.preventDefault();
+            const form = document.getElementById('applicationForm');
+
+            if (form.checkValidity()) {
+                document.getElementById('successModal').classList.remove('hidden');
+                
+                form.reset();
+                document.getElementById('level_output').innerText = '5'; 
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.add('hidden');
+        }
+
+        window.onload = function() {
+            const savedTheme = localStorage.getItem(themeKey) || 'dark';
+            applyTheme(savedTheme);
+
+            const skillLevelInput = document.getElementById('skill_level');
+            const levelOutput = document.getElementById('level_output');
+            if (skillLevelInput && levelOutput) {
+                levelOutput.innerText = skillLevelInput.value;
+            }
+        };
+    </script>
+</body>
+</html>
